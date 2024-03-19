@@ -1,32 +1,16 @@
 const express = require('express');
-const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 const { v4: uuidv4 } = require("uuid");
 const cron = require('node-cron');
 
+const cors = require('cors');
+
 const app = express();
 app.use(bodyParser.json());
-try {
-  mongoose.set('strictQuery', false);
 
-  mongoose.connect('mongodb://127.0.0.1:27017/projectX');
-
-  console.log("mongoDB connect");
-}
-catch (err) {
-  console.log("mongoDB NOT connection failed");
-
-}
+app.use(cors());
 
 
-
-
-const voteSchema = new mongoose.Schema({
-  votedRollNo: String,
-  createdAt: { type: Date, default: Date.now },
-});
-
-const Vote = mongoose.model('Vote', voteSchema);
 
 let currentMembers = getRandomRollNumbers();
 let currentVotes = {}; // Temporary storage for votes
@@ -113,7 +97,7 @@ app.post('/vote', (req, res) => {
   currentVotes[votedRollNo] = (currentVotes[votedRollNo] || 0) + 1;
   votedDevices.add(deviceId);
   
-  console.log(currentVotes[votedRollNo]);
+  // console.log(currentVotes[votedRollNo]);
    return res.sendStatus(200); 
 
 });
